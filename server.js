@@ -1,3 +1,4 @@
+
 const express = require('express');
 const cors = require('cors');
 
@@ -14,11 +15,7 @@ app.use(express.json());
 
 app.post('/api/dato', async (req, res) => {
   const { prompt } = req.body;
-
-  if (!prompt) {
-    return res.status(400).json({ error: 'Falta el prompt' });
-  }
-
+  if (!prompt) return res.status(400).json({ error: 'Falta el prompt' });
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -33,12 +30,10 @@ app.post('/api/dato', async (req, res) => {
         messages: [{ role: 'user', content: prompt }]
       })
     });
-
     if (!response.ok) {
       const err = await response.text();
       return res.status(response.status).json({ error: err });
     }
-
     const data = await response.json();
     res.json(data);
   } catch (err) {
